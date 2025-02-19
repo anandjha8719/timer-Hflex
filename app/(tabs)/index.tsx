@@ -1,25 +1,47 @@
-import { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { List, FAB, Modal, Portal, Text, Button } from 'react-native-paper';
-import { Timer, HistoryItem } from '../../types';
-import { loadTimers, saveTimers, saveHistory, loadHistory } from '../../storage';
-import TimerItem from '../../components/TimerItem';
-import CategoryActions from '../../components/CategoryActions';
-import { router } from 'expo-router';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { List, FAB, Modal, Portal, Text, Button } from "react-native-paper";
+import { Timer, HistoryItem } from "../../types";
+import {
+  loadTimers,
+  saveTimers,
+  saveHistory,
+  loadHistory,
+} from "../../storage";
+import TimerItem from "../../components/TimerItem";
+import CategoryActions from "../../components/CategoryActions";
+import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 export default function HomeScreen() {
   const [timers, setTimers] = useState<Timer[]>([]);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set()
+  );
   const [completedTimer, setCompletedTimer] = useState<Timer | null>(null);
-  const [intervals, setIntervals] = useState<Record<string, NodeJS.Timeout>>({});
+  const [intervals, setIntervals] = useState<Record<string, NodeJS.Timeout>>(
+    {}
+  );
 
+  // Update the useEffect to useFocusEffect
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadData = async () => {
+        const loadedTimers = await loadTimers();
+        setTimers(loadedTimers);
+      };
+      loadData();
+    }, [])
+  );
   useEffect(() => {
     loadTimers().then(setTimers);
   }, []);
 
-  const categories = Array.from(new Set(timers.map(t => t.category || 'Uncategorized')));
+  const categories = Array.from(
+    new Set(timers.map((t) => t.category || "Uncategorized"))
+  );
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => {
+    setExpandedCategories((prev) => {
       const newSet = new Set(prev);
       newSet.has(category) ? newSet.delete(category) : newSet.add(category);
       return newSet;
@@ -27,7 +49,9 @@ export default function HomeScreen() {
   };
 
   const handleTimerUpdate = async (updatedTimer: Timer) => {
-    const newTimers = timers.map(t => t.id === updatedTimer.id ? updatedTimer : t);
+    const newTimers = timers.map((t) =>
+      t.id === updatedTimer.id ? updatedTimer : t
+    );
     setTimers(newTimers);
     await saveTimers(newTimers);
   };
@@ -43,34 +67,44 @@ export default function HomeScreen() {
     setCompletedTimer(timer);
   };
 
-  const handleBulkAction = (category: string, action: 'start' | 'pause' | 'reset') => {
-    const categoryTimers = timers.filter(t => t.category === category);
-    const updatedTimers = categoryTimers.map(timer => {
-      switch(action) {
-        case 'start': return { ...timer, status: 'running' };
-        case 'pause': return { ...timer, status: 'paused' };
-        case 'reset': return { 
-          ...timer, 
-          status: 'paused',
-          remaining: timer.duration
-        };
-        default: return timer;
+  const handleBulkAction = (
+    category: string,
+    action: "start" | "pause" | "reset"
+  ) => {
+    const categoryTimers = timers.filter((t) => t.category === category);
+    const updatedTimers = categoryTimers.map((timer) => {
+      switch (action) {
+        case "start":
+          return { ...timer, status: "running" };
+        case "pause":
+          return { ...timer, status: "paused" };
+        case "reset":
+          return {
+            ...timer,
+            status: "paused",
+            remaining: timer.duration,
+          };
+        default:
+          return timer;
       }
     });
-    setTimers(timers.map(t => 
-      t.category === category 
-        ? updatedTimers.find(ut => ut.id === t.id)! 
-        : t
-    ));
+    setTimers(
+      timers.map((t) =>
+        t.category === category
+          ? updatedTimers.find((ut) => ut.id === t.id)!
+          : t
+      )
+    );
     saveTimers(timers);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="box-none">
       <Portal>
         <Modal
           visible={!!completedTimer}
-          onDismiss={() => setCompletedTimer(null)}>
+          onDismiss={() => setCompletedTimer(null)}
+        >
           <View style={styles.modal}>
             <Text variant="titleLarge">Timer Completed!</Text>
             <Text variant="bodyMedium">{completedTimer?.name}</Text>
@@ -81,21 +115,21 @@ export default function HomeScreen() {
         </Modal>
       </Portal>
 
-      {categories.map(category => (
+      {categories.map((category) => (
         <List.Accordion
           key={category}
           title={category}
           expanded={expandedCategories.has(category)}
           onPress={() => toggleCategory(category)}
           right={() => (
-            <CategoryActions
-              category={category}
-              onAction={handleBulkAction}
-            />
-          )}>
+            <CategoryActions category={category} onAction={handleBulkAction} />
+          )}
+          titleStyle={styles.categoryTitle}
+          pointerEvents="box-none"
+        >
           {timers
-            .filter(t => t.category === category)
-            .map(timer => (
+            .filter((t) => t.category === category)
+            .map((timer) => (
               <TimerItem
                 key={timer.id}
                 timer={timer}
@@ -111,7 +145,7 @@ export default function HomeScreen() {
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => router.push('/add-timer')}
+        onPress={() => router.push("/add-timer")}
       />
     </View>
   );
@@ -119,12 +153,19 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  fab: { position: 'absolute', bottom: 16, right: 16 },
+  fab: { position: "absolute", bottom: 16, right: 16 },
   modal: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     margin: 20,
     borderRadius: 8,
     gap: 16,
+  },
+  categoryHeader: {
+    // backgroundColor: "#f5f5f5",
+  },
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { List, ProgressBar, Button, IconButton } from "react-native-paper";
 import { Timer } from "../types";
 
@@ -19,7 +19,21 @@ export default function TimerItem({
   >;
 }) {
   const [remaining, setRemaining] = useState(timer.remaining);
-  const progress = 1 - remaining / timer.duration;
+  const progress = (timer.duration - remaining) / timer.duration;
+  const [alertShown, setAlertShown] = useState(false);
+  // Add this useEffect
+  useEffect(() => {
+    if (
+      timer.halfwayAlert &&
+      !alertShown &&
+      remaining === Math.floor(timer.duration / 2)
+    ) {
+      Alert.alert("Halfway There!", `${timer.name} is 50% complete!`, [
+        { text: "OK" },
+      ]);
+      setAlertShown(true);
+    }
+  }, [remaining]);
 
   useEffect(() => {
     if (timer.status === "running" && !intervalRefs[timer.id]) {
@@ -62,6 +76,7 @@ export default function TimerItem({
 
   const handleReset = () => {
     setRemaining(timer.duration);
+    setAlertShown(false);
     onUpdate({ ...timer, remaining: timer.duration, status: "paused" });
   };
 
@@ -69,6 +84,8 @@ export default function TimerItem({
     <List.Item
       title={timer.name}
       description={`${remaining}s`}
+      titleStyle={styles.timerTitle}
+      descriptionStyle={styles.timerDescription}
       right={() => (
         <View style={styles.controls}>
           <ProgressBar progress={progress} style={styles.progress} />
@@ -100,9 +117,17 @@ const styles = StyleSheet.create({
   controls: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: 'space-between',
-    paddingRight: 120,
+    justifyContent: "space-between",
   },
-  progress: { width: 100, marginRight: 8, height: 4, marginVertical: 'auto' },
+  progress: { width: 100, marginRight: 8, height: 4, marginVertical: "auto" },
   buttons: { flexDirection: "row" },
+  timerTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#000",
+  },
+  timerDescription: {
+    fontSize: 14,
+    color: "#666",
+  },
 });
