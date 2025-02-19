@@ -1,15 +1,22 @@
-import { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { List } from 'react-native-paper';
-import { loadHistory } from '../../storage';
-import { HistoryItem } from '../../types';
+import { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { List } from "react-native-paper";
+import { loadHistory } from "../../storage";
+import { HistoryItem } from "../../types";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
-  useEffect(() => {
-    loadHistory().then(setHistory);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const load = async () => {
+        const loadedHistory = await loadHistory();
+        setHistory(loadedHistory);
+      };
+      load();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -19,6 +26,7 @@ export default function HistoryScreen() {
           title={item.name}
           description={item.completedAt.toLocaleString()}
           left={() => <List.Icon icon="clock-check" />}
+          pointerEvents="box-none"
         />
       ))}
     </View>
