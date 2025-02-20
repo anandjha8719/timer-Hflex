@@ -2,7 +2,11 @@
 
 A feature-rich timer management application built with React Native and Expo. Manage multiple timers with categories, track completion history, and visualize progress.
 
-![App Preview](https://via.placeholder.com/800x400.png?text=Timer+App+Preview) <!-- Add actual screenshot later -->
+## 🚀 Release
+
+🔗 **[Download APK](https://drive.google.com/file/d/1Z2EIQaudK_qQymB5qLwrbcZGEiRBoxmp/view?usp=sharing) — Live Preview**
+
+---
 
 ## ✨ Features
 
