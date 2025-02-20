@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# ⏱️ Expo Timer Manager App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A feature-rich timer management application built with React Native and Expo. Manage multiple timers with categories, track completion history, and visualize progress.
 
-## Get started
+![App Preview](https://via.placeholder.com/800x400.png?text=Timer+App+Preview) <!-- Add actual screenshot later -->
 
-1. Install dependencies
+## ✨ Features
 
+- 🎯 Create timers with custom names/categories
+- 📊 Visual progress indicators
+- 📅 Completion history tracking
+- 🚀 Bulk category controls (Start/Pause/Reset All)
+- 🔔 50% completion alerts
+- 🌓 Light/Dark mode support
+- 📥 Export timer history
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js v16+
+- Expo CLI (`npm install -g expo-cli`)
+- Android/iOS simulator or physical device
+
+### Installation
+
+1. **Clone repository**
+
+   ```bash
+   git clone https://github.com/yourusername/expo-timer-app.git
+   cd expo-timer-app
+
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
+   npx expo install @react-navigation/native react-native-paper @react-native-async-storage/async-storage react-native-safe-area-context react-native-screens react-native-gesture-handler @expo/vector-icons
    ```
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+3 **Start development sever**
 
 ```bash
-npm run reset-project
+npx expo start
+
+
+## 🧠 Implementation Assumptions
+**Data Persistence**
+Uses AsyncStorage for local data persistence
+
+Maximum 1000 timers stored locally
+
+History limited to last 500 completed timers
+
+**Device Capabilities**
+
+Assumes device supports vibration for alerts
+
+Requires notification permissions for alerts
+
+Timezone-aware history timestamps
+
+Categories are case-sensitive ("Work" ≠ "work")
+
+Timer resolution limited to 1-second intervals
+
+
+Technical Constraints
+
+Optimized for mobile screens (responsive but not tablet-optimized)
+
+Tested on iOS 15+/Android 11+
+
+Not designed for background operation (timers pause when app inactive)
 ```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
