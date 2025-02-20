@@ -18,7 +18,7 @@ A feature-rich timer management application built with React Native and Expo. Ma
 
 ### Prerequisites
 
-- Node.js v16+
+- Node.js v18+
 - Expo CLI (`npm install -g expo-cli`)
 - Android/iOS simulator or physical device
 
@@ -27,8 +27,8 @@ A feature-rich timer management application built with React Native and Expo. Ma
 1. **Clone repository**
 
    ```bash
-   git clone https://github.com/yourusername/expo-timer-app.git
-   cd expo-timer-app
+   git clone https://github.com/anandjha8719/timer-Hflex.git
+   cd timer-Hflex
 
    ```
 
@@ -43,33 +43,19 @@ A feature-rich timer management application built with React Native and Expo. Ma
 ```bash
 npx expo start
 
-
 ## 🧠 Implementation Assumptions
-**Data Persistence**
-Uses AsyncStorage for local data persistence
 
-Maximum 1000 timers stored locally
+### 📌 Data Persistence
+- Uses **AsyncStorage** for local data persistence
+- Maximum **1,000 timers** stored locally
+- History limited to **last 500 completed timers**
 
-History limited to last 500 completed timers
+### 📱 Device Capabilities
+- **Timezone-aware** history timestamps
+- Categories are **case-sensitive** (`"Work"` ≠ `"work"`)
+- Timer resolution limited to **1-second intervals**
 
-**Device Capabilities**
-
-Assumes device supports vibration for alerts
-
-Requires notification permissions for alerts
-
-Timezone-aware history timestamps
-
-Categories are case-sensitive ("Work" ≠ "work")
-
-Timer resolution limited to 1-second intervals
-
-
-Technical Constraints
-
-Optimized for mobile screens (responsive but not tablet-optimized)
-
-Tested on iOS 15+/Android 11+
-
-Not designed for background operation (timers pause when app inactive)
+### ⚙️ Technical Constraints
+- Optimized for **mobile screens** (not tablet-optimized)
+- **Not designed for background operation** (timers pause when the app is inactive)
 ```
